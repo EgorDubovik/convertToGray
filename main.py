@@ -13,22 +13,35 @@ def ImgCropped(img):
         st = np.round((h-w)/2).astype(int)
         return img[st:st+w, 0:w], w
 
+def getGrayColor(sr):
+    count = 8
+    start = np.round(255/count).astype(int)
+    p = np.round(sr/start).astype(int)*start
+    return p
 
+
+
+def toGray(img):
+    h, w = img.shape[:2]
+    for i in range(h):
+        for j in range(w):
+            img[i,j] = getGrayColor(sum(img[i,j])/3)
+    return img
 
 if __name__ == '__main__':
 
-    _COUNT = 500
+    _COUNT = 100
 
-    img = cv2.imread('test.png', cv2.IMREAD_COLOR)
+    imgOriginal = cv2.imread('test.png', cv2.IMREAD_COLOR)
 
-    imgCropped, s = ImgCropped(img)
+    imgCropped, s = ImgCropped(imgOriginal)
     imgResize = cv2.resize(imgCropped, (_COUNT, _COUNT), interpolation=cv2.INTER_AREA)
-
-    cv2.imshow('Cropped', imgCropped)
-    cv2.imshow('Resize', imgResize)
-
+    imgGray = toGray(imgResize)
+    cv2.imshow('ResizeGray', imgGray)
+    getGrayColor(156)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
 
 
 
